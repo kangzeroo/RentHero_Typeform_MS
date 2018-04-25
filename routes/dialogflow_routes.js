@@ -68,7 +68,7 @@ exports.send_message = function(req, res, next) {
         // once we have the response, only then do we dispatch an action to Redux
         console.log(data.data)
         reply = data.data.result.fulfillment.speech
-        return saveDialog(req.body.message, data.data.sessionId, req.body.ad_id)
+        return saveDialog(req.body.message, req.body.sessionId, req.body.sessionId)
       })
       .then((data) => {
         res.json({
@@ -85,38 +85,62 @@ exports.send_message = function(req, res, next) {
 exports.dialogflow_fulfillment_renthero = function(req, res, next) {
   console.log(req.body)
   console.log(req.body.queryResult.fulfillmentMessages[0].text.text)
-  const intentID = req.body.queryResult.intent.name
-  const intentName = req.body.queryResult.intent.displayName
   const sessionID = req.body.session.slice(req.body.session.indexOf('/sessions/') + '/sessions/'.length)
   let ad_id = ''
   let reply = ''
-  getAdIdFromSession(sessionID)
-    .then((id) => {
-      ad_id = id
-      return fetchAppropriateTagsForIntent(intentID, intentName)
-    })
-    .then((tags) => {
-      return queryDynamoDBAnswersForTags(tags, ad_id)
-    })
-    .then((matchedAnswer) => {
-      reply = matchedAnswer
-      // console.log(matchedAnswer)
-      return saveDialog(matchedAnswer, sessionID, intentID)
-    })
-    .then((data) => {
-      res.json({
-        "fulfillmentText": reply,
-        "fulfillmentMessages": [],
-        "outputContexts": []
+  if (req.body.queryResult.intent) {
+    const intentID = req.body.queryResult.intent.name
+    const intentName = req.body.queryResult.intent.displayName
+    getAdIdFromSession(sessionID)
+      .then((id) => {
+        ad_id = id
+        return fetchAppropriateTagsForIntent(intentID, intentName)
       })
-    })
-    .catch((err) => {
-      res.json({
-        "fulfillmentText": 'Unfortunetely I do not know the answer to this question',
-        "fulfillmentMessages": [],
-        "outputContexts": []
+      .then((tags) => {
+        return queryDynamoDBAnswersForTags(tags, ad_id)
       })
-    })
+      .then((matchedAnswer) => {
+        reply = matchedAnswer
+        // console.log(matchedAnswer)
+        return saveDialog(matchedAnswer, sessionID, intentID)
+      })
+      .then((data) => {
+        res.json({
+          "fulfillmentText": reply,
+          "fulfillmentMessages": [],
+          "outputContexts": []
+        })
+      })
+      .catch((err) => {
+        res.json({
+          "fulfillmentText": 'Ouch, this question somehow gave me a headache! :( Maybe try again later',
+          "fulfillmentMessages": [],
+          "outputContexts": []
+        })
+      })
+  } else {
+    getAdIdFromSession(sessionID)
+      .then((id) => {
+        ad_id = id
+        // console.log(matchedAnswer)
+        const message = req.body.queryResult.fulfillmentText ? req.body.queryResult.fulfillmentText : req.body.queryResult.fulfillmentMessages[0].text.text
+        return saveDialog(message, sessionID, req.body.queryResult.action)
+      })
+      .then((data) => {
+        res.json({
+          "fulfillmentText": req.body.queryResult.fulfillmentText,
+          "fulfillmentMessages": req.body.queryResult.fulfillmentMessages,
+          "outputContexts": []
+        })
+      })
+      .catch((err) => {
+        res.json({
+          "fulfillmentText": 'Ouch, this question somehow gave me a headache! :( Maybe try again later',
+          "fulfillmentMessages": [],
+          "outputContexts": []
+        })
+      })
+  }
 }
 
 /*

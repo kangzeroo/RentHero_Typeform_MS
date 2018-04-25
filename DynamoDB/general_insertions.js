@@ -20,7 +20,7 @@ exports.insertItem = function(item){
     docClient.putItem(item, function(err, data) {
       if (err){
           // console.log(JSON.stringify(err, null, 2));
-          rej('error inserting item into DynamoDB')
+          rej(err)
       }else{
           console.log('INTEL INSERTION SUCCESS!')
           res('saved')
