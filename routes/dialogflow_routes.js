@@ -84,7 +84,7 @@ exports.send_message = function(req, res, next) {
 
 exports.dialogflow_fulfillment_renthero = function(req, res, next) {
   console.log(req.body)
-  console.log(req.body.queryResult.fulfillmentMessages)
+  console.log(req.body.queryResult.fulfillmentMessages[0].text.text)
   const intentID = req.body.queryResult.intent.name
   const intentName = req.body.queryResult.intent.displayName
   const sessionID = req.body.session.slice(req.body.session.indexOf('/sessions/') + '/sessions/'.length)

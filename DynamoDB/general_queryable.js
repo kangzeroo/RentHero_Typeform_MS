@@ -67,7 +67,7 @@ exports.query_dynamodb = function(params) {
       next: onNext,
       error: (err) => {
         console.log('OBSERVABLE ERROR')
-        // console.log(err)
+        console.log(err)
       },
       complete: (y) => {
         console.log('OBSERVABLE COMPLETE')
