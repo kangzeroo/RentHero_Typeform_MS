@@ -3,7 +3,7 @@ const AWS = require('aws-sdk')
 const aws_config = require('../credentials/aws_config')
 const dynaDoc = require("dynamodb-doc");
 AWS.config.update(aws_config)
-
+console.log(aws_config)
 const dynamodb = new AWS.DynamoDB({
   dynamodb: '2012-08-10',
   region: "us-east-1"
