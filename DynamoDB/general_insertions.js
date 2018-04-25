@@ -4,6 +4,7 @@ const dynaDoc = require("dynamodb-doc");
 const path = require('path')
 const pathToAWSConfig = path.join(__dirname, '..', 'credentials', 'aws_config.json')
 const aws_config = require(pathToAWSConfig)
+AWS.config.update(aws_config)
 // AWS.config.update(aws_config)
 // console.log(pathToAWSConfig)
 // AWS.config.loadFromPath('../credentials/aws_config.json')
