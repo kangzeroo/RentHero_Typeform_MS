@@ -24,7 +24,7 @@ exports.saveSessionAndAdIds = (session_id, ad_id) => {
     const values = [session_id, ad_id]
 
     const insert_session = `INSERT INTO chat_session_ad (session_id, ad_id)
-                                 VALUES ($1, $2) RETURNING chat_id`
+                                 VALUES ($1, $2) RETURNING id`
 
     query(insert_session, values)
     .then((data) => {
