@@ -64,24 +64,28 @@ exports.send_message = function(req, res, next) {
     }
   }
   let reply = ''
-  axios.post(`https://api.dialogflow.com/api/query?v=20150910`, params, headers)
-      .then((data) => {
-        // once we have the response, only then do we dispatch an action to Redux
-        console.log('------------ response from query -----------')
-        console.log(data.data)
-        reply = data.data.result.fulfillment.speech
-        return saveDialog(req.body.message, req.body.session_id, req.body.session_id)
+  saveDialog(req.body.message, req.body.session_id, req.body.session_id)
+    .then((data) => {
+      return axios.post(`https://api.dialogflow.com/api/query?v=20150910`, params, headers)
+    })
+    .then((data) => {
+      // once we have the response, only then do we dispatch an action to Redux
+      console.log('------------ response from query -----------')
+      console.log(data.data)
+      reply = data.data.result.fulfillment.speech
+      const sender = data.data.result.metadata.intentName ? data.data.result.metadata.intentName : data.data.result.action
+      return saveDialog(reply, req.body.session_id, sender)
+    })
+    .then((data) => {
+      res.json({
+        message: reply
       })
-      .then((data) => {
-        res.json({
-          message: reply
-        })
-      })
-      .catch((err) => {
-        // console.log(err)
-        console.log(err.response.data)
-        res.status(500).send(err)
-      })
+    })
+    .catch((err) => {
+      // console.log(err)
+      console.log(err.response.data)
+      res.status(500).send(err)
+    })
 }
 
 exports.dialogflow_fulfillment_renthero = function(req, res, next) {
@@ -103,17 +107,22 @@ exports.dialogflow_fulfillment_renthero = function(req, res, next) {
         return queryDynamoDBAnswersForTags(tags, ad_id)
       })
       .then((matchedAnswer) => {
-        reply = matchedAnswer
-        // console.log(matchedAnswer)
-        return saveDialog(matchedAnswer, sessionID, intentID)
-      })
-      .then((data) => {
         res.json({
-          "fulfillmentText": reply,
+          "fulfillmentText": matchedAnswer,
           "fulfillmentMessages": [],
           "outputContexts": []
         })
+        // reply = matchedAnswer
+        // // console.log(matchedAnswer)
+        // return saveDialog(matchedAnswer, sessionID, intentID)
       })
+      // .then((data) => {
+      //   res.json({
+      //     "fulfillmentText": reply,
+      //     "fulfillmentMessages": [],
+      //     "outputContexts": []
+      //   })
+      // })
       .catch((err) => {
         res.json({
           "fulfillmentText": 'Ouch, this question somehow gave me a headache! :( Maybe try again later',
@@ -122,27 +131,32 @@ exports.dialogflow_fulfillment_renthero = function(req, res, next) {
         })
       })
   } else {
-    getAdIdFromSession(sessionID)
-      .then((id) => {
-        ad_id = id.ad_id
-        // console.log(matchedAnswer)
-        const message = req.body.queryResult.fulfillmentText ? req.body.queryResult.fulfillmentText : req.body.queryResult.fulfillmentMessages[0].text.text
-        return saveDialog(message, sessionID, req.body.queryResult.action)
-      })
-      .then((data) => {
-        res.json({
-          "fulfillmentText": req.body.queryResult.fulfillmentText,
-          "fulfillmentMessages": req.body.queryResult.fulfillmentMessages,
-          "outputContexts": []
-        })
-      })
-      .catch((err) => {
-        res.json({
-          "fulfillmentText": 'Ouch, this question somehow gave me a headache! :( Maybe try again later',
-          "fulfillmentMessages": [],
-          "outputContexts": []
-        })
-      })
+    res.json({
+      "fulfillmentText": req.body.queryResult.fulfillmentText,
+      "fulfillmentMessages": req.body.queryResult.fulfillmentMessages,
+      "outputContexts": []
+    })
+    // getAdIdFromSession(sessionID)
+    //   .then((id) => {
+    //     ad_id = id.ad_id
+    //     // console.log(matchedAnswer)
+    //     const message = req.body.queryResult.fulfillmentText ? req.body.queryResult.fulfillmentText : req.body.queryResult.fulfillmentMessages[0].text.text
+    //     return saveDialog(message, sessionID, req.body.queryResult.action)
+    //   })
+    //   .then((data) => {
+    //     res.json({
+    //       "fulfillmentText": req.body.queryResult.fulfillmentText,
+    //       "fulfillmentMessages": req.body.queryResult.fulfillmentMessages,
+    //       "outputContexts": []
+    //     })
+    //   })
+    //   .catch((err) => {
+    //     res.json({
+    //       "fulfillmentText": 'Ouch, this question somehow gave me a headache! :( Maybe try again later',
+    //       "fulfillmentMessages": [],
+    //       "outputContexts": []
+    //     })
+    //   })
   }
 }
 
