@@ -1,8 +1,9 @@
 
 const AWS = require('aws-sdk')
-const aws_config = require('../credentials/aws_config')
 const dynaDoc = require("dynamodb-doc");
-AWS.config.update(aws_config)
+// const aws_config = require('../credentials/aws_config')
+// AWS.config.update(aws_config)
+AWS.config.loadFromPath('../credentials/aws_config.json')
 console.log('------ AWS CONFIG ------')
 console.log(aws_config)
 const dynamodb = new AWS.DynamoDB({
