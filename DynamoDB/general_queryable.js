@@ -13,6 +13,9 @@ const docClient = new dynaDoc.DynamoDB(dynamodb)
 
 
 exports.query_dynamodb = function(params) {
+  console.log('------ query_dynamodb ')
+  console.log(params)
+  console.log(params.ExpressionAttributeValues[':ad_id'])
   /*
   	"params": {
         "TableName": "Building_Interactions_Intel",
@@ -81,6 +84,8 @@ exports.query_dynamodb = function(params) {
 
 
 exports.scan_dynamodb = function(params) {
+  console.log('------ scan_dynamodb ')
+  console.log(params)
   /*
   	"params": {
         "TableName": "Building_Interactions_Intel",

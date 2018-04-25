@@ -49,6 +49,7 @@ exports.init_dialogflow = function(req, res, next) {
 }
 
 exports.send_message = function(req, res, next) {
+  console.log('------ SEND MESSAGE -------')
   console.log(req.body)
   const params = {
     "contexts": [],
@@ -66,9 +67,10 @@ exports.send_message = function(req, res, next) {
   axios.post(`https://api.dialogflow.com/api/query?v=20150910`, params, headers)
       .then((data) => {
         // once we have the response, only then do we dispatch an action to Redux
+        console.log('------------ response from query -----------')
         console.log(data.data)
         reply = data.data.result.fulfillment.speech
-        return saveDialog(req.body.message, req.body.sessionId, req.body.sessionId)
+        return saveDialog(req.body.message, req.body.session_id, req.body.session_id)
       })
       .then((data) => {
         res.json({
@@ -76,13 +78,14 @@ exports.send_message = function(req, res, next) {
         })
       })
       .catch((err) => {
-        console.log(err)
+        // console.log(err)
         console.log(err.response.data)
         res.status(500).send(err)
       })
 }
 
 exports.dialogflow_fulfillment_renthero = function(req, res, next) {
+  console.log('------ DIALOG FLOW FULFILLMENT -------')
   console.log(req.body)
   console.log(req.body.queryResult.fulfillmentMessages[0].text.text)
   const sessionID = req.body.session.slice(req.body.session.indexOf('/sessions/') + '/sessions/'.length)
@@ -93,7 +96,7 @@ exports.dialogflow_fulfillment_renthero = function(req, res, next) {
     const intentName = req.body.queryResult.intent.displayName
     getAdIdFromSession(sessionID)
       .then((id) => {
-        ad_id = id
+        ad_id = id.ad_id
         return fetchAppropriateTagsForIntent(intentID, intentName)
       })
       .then((tags) => {
@@ -121,7 +124,7 @@ exports.dialogflow_fulfillment_renthero = function(req, res, next) {
   } else {
     getAdIdFromSession(sessionID)
       .then((id) => {
-        ad_id = id
+        ad_id = id.ad_id
         // console.log(matchedAnswer)
         const message = req.body.queryResult.fulfillmentText ? req.body.queryResult.fulfillmentText : req.body.queryResult.fulfillmentMessages[0].text.text
         return saveDialog(message, sessionID, req.body.queryResult.action)

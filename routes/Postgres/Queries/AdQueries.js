@@ -45,9 +45,9 @@ exports.getAdIdFromSession = (session_id) => {
     const get_ad = `SELECT * FROM chat_session_ad WHERE session_id = $1`
 
     const return_rows = (rows) => {
-    console.log(rows)
-          res(rows)
-        }
+      console.log(rows)
+      res(rows[0])
+    }
     return query(get_ad, values)
       .then((data) => {
         return stringify_rows(data)
