@@ -1,0 +1,153 @@
+{
+   "id":"ksLFy7",
+   "title":"Ideal Candidate Typeform",
+   "theme":{
+      "href":"https:\/\/api.typeform.com\/themes\/ujrWgo"
+   },
+   "workspace":{
+      "href":"https:\/\/api.typeform.com\/workspaces\/G5vEZu"
+   },
+   "settings":{
+      "is_public":true,
+      "is_trial":false,
+      "language":"en",
+      "progress_bar":"proportion",
+      "show_progress_bar":true,
+      "show_typeform_branding":false,
+      "meta":{
+         "allow_indexing":false
+      }
+   },
+   "welcome_screens":[
+      {
+         "ref":"4e6f8eda-9b93-4612-995f-77979b532168",
+         "title":"Find your Ideal Tenants",
+         "properties":{
+            "show_button":true,
+            "description":"RentHero knows the right tenants will make all the difference in your daily tasks for the year. ",
+            "button_text":"Start"
+         },
+         "attachment":{
+            "type":"image",
+            "href":"https:\/\/images.typeform.com\/images\/Riwydptkw6vM"
+         }
+      }
+   ],
+   "thankyou_screens":[
+      {
+         "ref":"default_tys",
+         "title":"Done! Your information was sent perfectly.",
+         "properties":{
+            "show_button":false,
+            "share_icons":false
+         }
+      }
+   ],
+   "fields":[
+      {
+         "id":"WntIHm44F6ax",
+         "title":"Hello {{hidden:landlord_name}}, let\u0027s find your ideal tenant for {{hidden:building_address}}",
+         "ref":"5cb1df7d-55ba-4b7e-a3d1-d17ea82c2785",
+         "properties":{
+            "hide_marks":false,
+            "button_text":"Continue"
+         },
+         "type":"statement"
+      },
+      {
+         "id":"wN6TUNY2sx9g",
+         "title":"What tenants are you okay with?",
+         "ref":"96b86edf-22b4-4f27-b0f3-665f8f73feb7",
+         "properties":{
+            "randomize":false,
+            "allow_multiple_selection":true,
+            "allow_other_choice":true,
+            "vertical_alignment":true,
+            "choices":[
+               {
+                  "id":"MeoFC5w27Or0",
+                  "ref":"1fa952f6-0c29-472d-aec3-80869639891b",
+                  "label":"Family"
+               },
+               {
+                  "id":"NdlTOIKZVOKA",
+                  "ref":"189612ef-c234-4049-a88c-3b6c7b909ea0",
+                  "label":"Students"
+               },
+               {
+                  "id":"FZNVL7eO8Zvk",
+                  "ref":"c7bd1f10-8ee8-44f4-bf55-e41e763be851",
+                  "label":"Young Professionals"
+               }
+            ]
+         },
+         "validations":{
+            "required":false
+         },
+         "type":"multiple_choice"
+      },
+      {
+         "id":"jKd93VtEMhbY",
+         "title":"When can the tenant move in?",
+         "ref":"3d77b6c4-4d50-4a09-a1c4-840d5eb5e7f5",
+         "properties":{
+            "structure":"MMDDYYYY",
+            "separator":"\/"
+         },
+         "validations":{
+            "required":false
+         },
+         "type":"date"
+      },
+      {
+         "id":"emGXcMgENIFh",
+         "title":"When does an interested tenant need to provide commitment by? ",
+         "ref":"02824438-8ae6-4da9-a907-6fd020e42b88",
+         "validations":{
+            "required":false
+         },
+         "type":"short_text"
+      },
+      {
+         "id":"TYaP5XVgHei5",
+         "title":"Do you require these from a tenant? Any other supporting documents?",
+         "ref":"36369af1-90df-40f0-966d-dce95f2ad630",
+         "properties":{
+            "randomize":false,
+            "allow_multiple_selection":true,
+            "allow_other_choice":true,
+            "vertical_alignment":true,
+            "choices":[
+               {
+                  "id":"EkG4bBlUu4BS",
+                  "ref":"dfd33368-11cc-40c0-ae50-5269d17a68f0",
+                  "label":"Background Check"
+               },
+               {
+                  "id":"qmfXBnUjNdPB",
+                  "ref":"8df34457-0f2e-4d51-b36c-e0243ecc3401",
+                  "label":"Credit Check"
+               },
+               {
+                  "id":"Vldi8oIRdSRo",
+                  "ref":"bb1961c5-851e-4206-a6fa-c0ff3955a419",
+                  "label":"Rental References"
+               }
+            ]
+         },
+         "validations":{
+            "required":false
+         },
+         "type":"multiple_choice"
+      }
+   ],
+   "hidden":[
+      "identityid",
+      "landlord_name",
+      "building_address",
+      "ad_id"
+   ],
+   "_links":{
+      "display":"https:\/\/renthero.typeform.com\/to\/ksLFy7"
+   }
+}

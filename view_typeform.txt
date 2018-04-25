@@ -1,0 +1,16 @@
+// COPY AND PASTE THE BELOW TO TERMINAL with your own creds
+
+// WORKING EXAMPLE
+curl --request GET \
+  --url https://api.typeform.com/forms/{form_id} \
+  --header 'Authorization: bearer 2kSctvHaxdvidEhUuXjL5C35DrPTTb2MxC34mvRVdgfe' \
+
+
+// TEMPLATE
+curl --request GET \
+  --url https://api.typeform.com/forms/ksLFy7 \
+  --header 'Authorization: bearer 2kSctvHaxdvidEhUuXjL5C35DrPTTb2MxC34mvRVdgfe' \
+
+
+
+?identityid=123&landlord_name=Justin%20Qu&building_address=110%20Darling%20Way&ad_id=8888-8888

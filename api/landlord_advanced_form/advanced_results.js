@@ -1,0 +1,211 @@
+{
+   "id":"f2E1MJ",
+   "title":"Financials Typeform",
+   "theme":{
+      "href":"https:\/\/api.typeform.com\/themes\/lYCoE9"
+   },
+   "workspace":{
+      "href":"https:\/\/api.typeform.com\/workspaces\/G5vEZu"
+   },
+   "settings":{
+      "is_public":true,
+      "is_trial":false,
+      "language":"en",
+      "progress_bar":"proportion",
+      "show_progress_bar":true,
+      "show_typeform_branding":false,
+      "meta":{
+         "allow_indexing":false
+      }
+   },
+   "welcome_screens":[
+      {
+         "ref":"5e52f612-e0e8-44fe-8f54-131171dc22d3",
+         "title":"Tenant Payment FAQ",
+         "properties":{
+            "show_button":true,
+            "button_text":"Start"
+         },
+         "attachment":{
+            "type":"image",
+            "href":"https:\/\/images.typeform.com\/images\/fq2sniQW7Kaj"
+         }
+      }
+   ],
+   "thankyou_screens":[
+      {
+         "ref":"default_tys",
+         "title":"Done! Your information was sent perfectly.",
+         "properties":{
+            "show_button":false,
+            "share_icons":false
+         }
+      }
+   ],
+   "fields":[
+      {
+         "id":"DuwxJezZWAZ7",
+         "title":"Hello {{hidden:landlord_name}}, doing this right means less work in the future. For {{hidden:building_address}}",
+         "ref":"571087cf-ce63-420a-9396-c77e9a5c74d0",
+         "properties":{
+            "hide_marks":false,
+            "button_text":"Continue"
+         },
+         "type":"statement"
+      },
+      {
+         "id":"oi0spke884It",
+         "title":"How much is the upfront lease cost? Is it a lot?",
+         "ref":"627b9d2c-77c3-4980-b277-fcf89f2bdd57",
+         "validations":{
+            "required":false
+         },
+         "type":"short_text"
+      },
+      {
+         "id":"jircMez9JF2a",
+         "title":"Is the lease joint liability or individual liability?",
+         "ref":"9caaf1e8-3e1d-4b99-9325-0e3d08ba9279",
+         "properties":{
+            "randomize":false,
+            "allow_multiple_selection":false,
+            "allow_other_choice":false,
+            "vertical_alignment":true,
+            "choices":[
+               {
+                  "id":"kvjqIeExrVem",
+                  "ref":"a2c8b4aa-01b0-471f-99f3-832edccddcc4",
+                  "label":"Joint Liability"
+               },
+               {
+                  "id":"rG5lWtva2Zn5",
+                  "ref":"4020fd00-1d08-4547-b4dd-1fbdcbcc25e3",
+                  "label":"Individual Liability"
+               }
+            ]
+         },
+         "validations":{
+            "required":false
+         },
+         "type":"multiple_choice"
+      },
+      {
+         "id":"agI1PTOxX34D",
+         "title":"Are there any non-refundable fees?",
+         "ref":"e8909f08-562d-438c-9cff-9b7b08a13fe6",
+         "validations":{
+            "required":false
+         },
+         "type":"yes_no"
+      },
+      {
+         "id":"NSXHLmEcbUFn",
+         "title":"Do you pro-rate rent?",
+         "ref":"99a212b6-5374-4ebc-8ddd-4635277cc25d",
+         "validations":{
+            "required":false
+         },
+         "type":"yes_no"
+      },
+      {
+         "id":"YZbL2g1k85Gv",
+         "title":"How long are the lease terms?",
+         "ref":"9db1f364-20ce-4b07-baab-f8a1c5291c60",
+         "validations":{
+            "required":false
+         },
+         "type":"long_text"
+      },
+      {
+         "id":"jY5KaIW5X4BA",
+         "title":"Is the lease renewable?",
+         "ref":"2d8153eb-cec0-4f98-be9b-4499e7f75804",
+         "validations":{
+            "required":false
+         },
+         "type":"yes_no"
+      },
+      {
+         "id":"gtPN5O3RJSq6",
+         "title":"What are the conditions for a tenant to sublet their room out? ",
+         "ref":"24c06eb3-bcaf-4d10-853f-4237e0fe9cc4",
+         "validations":{
+            "required":false
+         },
+         "type":"long_text"
+      },
+      {
+         "id":"u7zJvu2PXvAZ",
+         "title":"Preferred rent payment method? ",
+         "ref":"6771aeec-9d04-47f6-8e0f-48aa722a8c03",
+         "properties":{
+            "randomize":false,
+            "allow_multiple_selection":false,
+            "allow_other_choice":true,
+            "vertical_alignment":true,
+            "choices":[
+               {
+                  "id":"WRrrrh6nY8Zs",
+                  "ref":"762e7815-6b1a-450d-9de8-30542c291b9a",
+                  "label":"Cheque"
+               },
+               {
+                  "id":"KK1ZbJWMk9CW",
+                  "ref":"492a5e69-67fc-461f-a9a5-1659eebe6437",
+                  "label":"Cash"
+               },
+               {
+                  "id":"m8VUKUtSXNfN",
+                  "ref":"de95267c-18a6-4416-86ed-9a4101ab0ef6",
+                  "label":"Credit Card"
+               },
+               {
+                  "id":"kk0cFwsPakZH",
+                  "ref":"df152f28-ff44-49aa-b948-c3e1d6335fce",
+                  "label":"E-transfer"
+               }
+            ]
+         },
+         "validations":{
+            "required":false
+         },
+         "type":"multiple_choice"
+      },
+      {
+         "id":"CYX3WcHLxJ5w",
+         "title":"Do you allow early lease terminations? ",
+         "ref":"67bf7aa5-6c9c-4f11-9e59-fdad9b2baab7",
+         "validations":{
+            "required":false
+         },
+         "type":"yes_no"
+      },
+      {
+         "id":"dpWtD72OeLNM",
+         "title":"Can you hold the suite if I need extra time? Does it require a deposit commitment?",
+         "ref":"6f536b12-3db7-4080-92f5-709ba02048ba",
+         "validations":{
+            "required":false
+         },
+         "type":"short_text"
+      },
+      {
+         "id":"xrtI9pzZaHqG",
+         "title":"Can I get a discounted price for renting longer or if I did repairs or maintenance myself?",
+         "ref":"4a6f86f5-8cb6-438e-9d12-a633a8d205a8",
+         "validations":{
+            "required":false
+         },
+         "type":"short_text"
+      }
+   ],
+   "hidden":[
+      "identityid",
+      "landlord_name",
+      "building_address",
+      "ad_id"
+   ],
+   "_links":{
+      "display":"https:\/\/renthero.typeform.com\/to\/f2E1MJ"
+   }
+}

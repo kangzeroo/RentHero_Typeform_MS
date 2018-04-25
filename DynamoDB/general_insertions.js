@@ -1,0 +1,61 @@
+
+const AWS = require('aws-sdk')
+const aws_config = require('../credentials/aws_config')
+const dynaDoc = require("dynamodb-doc");
+AWS.config.update(aws_config)
+
+const dynamodb = new AWS.DynamoDB({
+  dynamodb: '2012-08-10',
+  region: "us-east-1"
+})
+const docClient = new dynaDoc.DynamoDB(dynamodb)
+
+// to insert or update an entry
+exports.insertItem = function(item){
+  const p = new Promise((res, rej) => {
+    // const intelObj = {
+    //   'TableName': 'TOUR_HINTS',
+    //   'Item': intel,
+    // }
+    docClient.putItem(item, function(err, data) {
+      if (err){
+          // console.log(JSON.stringify(err, null, 2));
+          rej('error inserting item into DynamoDB')
+      }else{
+          console.log('INTEL INSERTION SUCCESS!')
+          res('saved')
+      }
+    })
+  })
+  return p
+}
+
+exports.batchInsertItems = function(items){
+  console.log('batchInsertItems')
+  const p = new Promise((res, rej) => {
+    if (items.length > 0) {
+      const params = {
+        RequestItems: {
+          [items[0].TableName]: items.map((item) => {
+            return {
+              PutRequest: {
+                Item: item.Item
+              }
+            }
+          })
+        }
+      }
+      docClient.batchWriteItem(params, function(err, data) {
+        if (err){
+            console.log(JSON.stringify(err, null, 2));
+            console.log(err)
+            rej()
+        }else{
+            console.log('INTEL BATCH INSERTION SUCCESS!')
+            res()
+        }
+      })
+    }
+  })
+  return p
+}

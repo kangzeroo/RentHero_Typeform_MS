@@ -1,0 +1,16 @@
+// COPY AND PASTE THE BELOW TO TERMINAL with your own creds
+
+// WORKING EXAMPLE
+curl --request PUT \
+  --url https://api.typeform.com/forms/ksLFy7/webhooks/seeking_typeform \
+  --header 'Authorization: bearer 2kSctvHaxdvidEhUuXjL5C35DrPTTb2MxC34mvRVdgfe' \
+  --header 'Content-Type: application/json' \
+  -d '{"url":"https://f5862e7c.ngrok.io/seeking_typeform", "enabled":true}'
+
+
+// TEMPLATE
+curl --request PUT \
+  --url https://api.typeform.com/forms/{typeform_id}/webhooks/{alias_name} \
+  --header 'Authorization: bearer {your_auth_token}' \
+  --header 'Content-Type: application/json' \
+  -d '{"url":"https://your_https_server.ngrok.io/typeform_webhook", "enabled":true}'
