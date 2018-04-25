@@ -19,7 +19,7 @@ exports.insertItem = function(item){
     // }
     docClient.putItem(item, function(err, data) {
       if (err){
-          // console.log(JSON.stringify(err, null, 2));
+          console.log(JSON.stringify(err, null, 2));
           rej(err)
       }else{
           console.log('INTEL INSERTION SUCCESS!')
