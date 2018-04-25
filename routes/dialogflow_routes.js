@@ -2,8 +2,8 @@ const axios = require('axios')
 const uuid = require('uuid')
 const fetchAppropriateTagsForIntent = require('../api/dialogflow_matcher').fetchAppropriateTagsForIntent
 const queryDynamoDBAnswersForTags = require('../DynamoDB/dialogflow_matching').queryDynamoDBAnswersForTags
-const getAdIdFromSession = (sessionID) => { return Promise.resolve('8888-8888') }
-const saveSessionAndAdIds = (session_id, ad_id) => { return Promise.resolve('saved pair') }
+const getAdIdFromSession = require('./Postgres/Queries/AdQueries').getAdIdFromSession
+const saveSessionAndAdIds = require('./Postgres/Queries/AdQueries').saveSessionAndAdIds
 const saveDialog = require('../DynamoDB/dialogflow_chat').saveDialog
 
 exports.init_dialogflow = function(req, res, next) {
