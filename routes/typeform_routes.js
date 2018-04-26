@@ -2,6 +2,8 @@ const process_basic_form = require('../api/landlord_basic_form/landlord_basic_fo
 const process_advanced_form = require('../api/landlord_advanced_form/landlord_advanced_form').process_advanced_form
 const process_seeking_form = require('../api/landlord_seeking_form/landlord_seeking_form').process_seeking_form
 const saveGroupedTypeFormDataToDynamoDB = require('../DynamoDB/typeform_saving').saveGroupedTypeFormDataToDynamoDB
+const checkDynamoForAds = require('../DynamoDB/typeform_saving').checkDynamoForAds
+const updateAnswer = require('../DynamoDB/typeform_saving').updateAnswer
 
 exports.basic_typeform = function(req, res, next) {
   // fs.writeFile("./output/typeform_output.json", JSON.stringify(typeform), function(err) {
@@ -72,5 +74,27 @@ exports.seeking_typeform = function(req, res, next) {
     })
     .catch((err) => {
       console.log(err)
+    })
+}
+
+exports.check_form_completion = function(req, res, next) {
+  const ad_id = req.body.ad_id
+  checkDynamoForAds(ad_id)
+    .then((data) => {
+      res.json(data)
+    })
+    .catch((err) => {
+      res.status(500).send(err)
+    })
+}
+
+exports.update_answer = function(req, res, next) {
+  const item = req.body.item
+  updateAnswer(item)
+    .then((data) => {
+      res.json(data)
+    }).catch((err) => {
+      console.log(err)
+      res.status(500).send(err)
     })
 }

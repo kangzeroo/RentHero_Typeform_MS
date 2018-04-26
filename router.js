@@ -25,4 +25,7 @@ module.exports = function(app){
 	app.post('/init_dialogflow', [json_encoding], DialogFlow.init_dialogflow)
 	app.post('/send_message', [json_encoding], DialogFlow.send_message)
 	app.post('/dialogflow_fulfillment_renthero', [json_encoding], DialogFlow.dialogflow_fulfillment_renthero)
+
+	app.post('/check_form_completion', [json_encoding], Typeform.check_form_completion)
+	app.post('/update_answer', [json_encoding], Typeform.update_answer)
 }
