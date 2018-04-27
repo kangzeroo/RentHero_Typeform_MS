@@ -57,5 +57,12 @@ exports.basic_elastic_dialog_map = {
         'CELL_RECEPTION',
       ],
     },
+    {
+      dialogFlow_intentName: 'PROPERTY_PRICE',
+      dialogFlow_intentID: 'projects/renthero-landlord-ai/agent/intents/1af74f44-1f0e-4140-94ee-4c3ee277f459',
+      typeForm_Tags: [
+        'PROPERTY_PRICE',
+      ],
+    },
   ]
 }

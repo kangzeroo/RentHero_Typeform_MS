@@ -1,3 +1,4 @@
+
 exports.basic_typeform_elastic_map = {
   form_id: 'xvmqm2',
   questions: [
@@ -40,6 +41,16 @@ exports.basic_typeform_elastic_map = {
       question_ids: ["zirm627vM4wp"],
       tag_ids: ['CELL_RECEPTION'],
       sample_phrasing: "Where in the suite has weak cell reception?"
+    },
+    {
+      question_ids: ["a7xfBvAvt5xA"],
+      tag_ids: ['AMENITIES_INCLUDED'],
+      sample_phrasing: "What amenities are included with this property?"
+    },
+    {
+      question_ids: ["Cf294wwhBR1N"],
+      tag_ids: ['PROPERTY_PRICE'],
+      sample_phrasing: "How much does each room cost?"
     },
   ]
 }
