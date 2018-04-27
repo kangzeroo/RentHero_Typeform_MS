@@ -22,10 +22,11 @@ exports.basic_typeform = function(req, res, next) {
       return saveGroupedTypeFormDataToDynamoDB(grouped, ad_id, landlord_id)
     })
     .then((data) => {
-      res.status(200).send(data)
+      res.status(200).send('Successfully saved POST /basic_typeform')
     })
     .catch((err) => {
       console.log(err)
+      res.status(500).send('An error occurred at POST /basic_typeform')
     })
 }
 
@@ -46,10 +47,11 @@ exports.advanced_typeform = function(req, res, next) {
       return saveGroupedTypeFormDataToDynamoDB(grouped, ad_id, landlord_id)
     })
     .then((data) => {
-      res.status(200).send(data)
+      res.status(200).send('Successfully saved POST /advanced_typeform')
     })
     .catch((err) => {
       console.log(err)
+      res.status(500).send('An error occurred at POST /advanced_typeform')
     })
 }
 
@@ -70,10 +72,11 @@ exports.seeking_typeform = function(req, res, next) {
       return saveGroupedTypeFormDataToDynamoDB(grouped, ad_id, landlord_id)
     })
     .then((data) => {
-      res.status(200).send(data)
+      res.status(200).send('Successfully saved POST /seeking_typeform')
     })
     .catch((err) => {
       console.log(err)
+      res.status(500).send('An error occurred at POST /seeking_typeform')
     })
 }
 
