@@ -1,18 +1,5 @@
 # RentHero Typeforms Microservice
-This microservice is for managing Typeforms for both tenants and landlords. It is specifically a server meant for receiving all Typeform webhooks. For future scalability this may later be converted to serverless code (either on Google Cloud Functions or AWS Lambda).
-
-## You will need
-1. cURL on terminal to configure Typeform trigger: https://onlinecurl.com/
-2. Download Ngrok for testing local webhook: https://ngrok.com/
-3. AWS DynamoDB for QaltA storage (Questions, ALTernatives, Answers)
-4. FuseJS or Elasticsearch (See below methods)
-
-## Setup Instructions
-1. Run this localhost repo with `npm run dev`
-2. Install and run Ngrok with `ngrok http 8001` to create a publically available webserver linked to your localhost repo
-3. Copy the code from `setup_typeform_webhook.txt` and fill in the variables required in the template (ie. your ngrok https url)
-4. Paste that code into online CURL and press enter. This `curl` command tells Typeform where to send completed form submissions (aka your webhook)
-5. Test your Typeform by completing a submission. Your localhost repo should receive the submission (aka your webhook was successfully hit)
+This microservice is for managing Typeforms for both tenants and landlords, which saves questions and answers to DynamoDB.
 
 ## When are changes needed?
 - Whenever you change the Typeform questions, the QuestionID changes, which is required to know which questions to extract for each `[tags]`. You will need to update the question dictionary located in `api/dictionary/basic_question_map.js` and other dictionaries for their corresponding forms.
@@ -20,12 +7,11 @@ This microservice is for managing Typeforms for both tenants and landlords. It i
 - To see the `QuestionID`s, use the CURL command located at `view_typeform.txt` to see the most recent typeform version
 
 ## Mappings for Setup
-The following are the type of mappings RentHero AI uses:
+The following are the type of mappings RentHero AI uses. They are hosted on AWS S3. To manage mappings, see the repo `RentHero_Mappings_Manager`
 1. Typeform to DynamoDB (to Elasticsearch)
-      - Map a Typeform question/answer with its Elasticsearch entry using `./api/landlord_basic_form/basic_question_map.js`
+      - Map a Typeform question/answer with its Elasticsearch entry using `./api/mapping_locations.js > basic_question_map.json`
 2. DialogFlow to Elasticsearch
-      - Map a DialogFlow intent fulfillment with an Elasticsearch entry using `./api/landlord_basic_form/basic_elastic_dialog_map.js`
-
+      - Map a DialogFlow intent fulfillment with an Elasticsearch entry using `./api/mapping_locations.js > basic_elastic_dialog_map.json`
 
 
 
