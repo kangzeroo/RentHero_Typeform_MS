@@ -1,11 +1,12 @@
+const axios = require('axios')
 const uuid = require('uuid')
 const moment = require('moment')
 const insertItem = require('./general_insertions').insertItem
 const query_dynamodb = require('./general_queryable').query_dynamodb
 const RENTHERO_QALTA_SETS = require('./schema/dynamodb_tablenames').RENTHERO_QALTA_SETS
-const basic_typeform_elastic_map = require('../api/landlord_basic_form/basic_typeform_elastic_map').basic_typeform_elastic_map
-const advanced_typeform_elastic_map = require('../api/landlord_advanced_form/advanced_typeform_elastic_map').advanced_typeform_elastic_map
-const seeking_typeform_elastic_map = require('../api/landlord_seeking_form/seeking_typeform_elastic_map').seeking_typeform_elastic_map
+const URL_basic_typeform_elastic_map = require('../api/mapping_locations').URL_basic_typeform_elastic_map
+const URL_advanced_typeform_elastic_map = require('../api/mapping_locations').URL_advanced_typeform_elastic_map
+const URL_seeking_typeform_elastic_map = require('../api/mapping_locations').URL_seeking_typeform_elastic_map
 
 exports.saveGroupedTypeFormDataToDynamoDB = function(grouped, ad_id, landlord_id){
   const p = new Promise((res, rej) => {
@@ -30,7 +31,7 @@ exports.saveGroupedTypeFormDataToDynamoDB = function(grouped, ad_id, landlord_id
 const saveQuestionAndAnswer = (group, ad_id, landlord_id) => {
   const x = [
     saveQuestionToDYN(group.question_phrasing, group.tags, ad_id, landlord_id),
-    saveAnswerToDYN(group.answer_phrasing, group.tags, ad_id, landlord_id)
+    saveAnswerToDYN(group.question_phrasing, group.answer_phrasing, group.tags, ad_id, landlord_id)
   ]
   return Promise.all(x)
 }
@@ -53,7 +54,7 @@ const saveQuestionToDYN = (question_phrasing, tags, ad_id, landlord_id) => {
   return insertItem(item)
 }
 
-const saveAnswerToDYN = (answer_phrasing, tags, ad_id, landlord_id) => {
+const saveAnswerToDYN = (question_phrasing, answer_phrasing, tags, ad_id, landlord_id) => {
   console.log('------------- saving answer... ---------------')
   const item = {
     'TableName': RENTHERO_QALTA_SETS,
@@ -62,6 +63,7 @@ const saveAnswerToDYN = (answer_phrasing, tags, ad_id, landlord_id) => {
       'ITEM_ID': uuid.v4(),
       'TYPE': 'ANSWER',
       'TAGS': tags,
+      'QUESTION': question_phrasing,
       'PHRASING': answer_phrasing,
       'DATETIME': moment().toISOString(),
       'LANDLORD_ID': landlord_id
@@ -87,7 +89,9 @@ exports.checkDynamoForAds = function(ad_id) {
       .then((QASets) => {
         console.log(QASets)
         console.log('---- nice')
-        const summary = sortQASets(QASets)
+        return sortQASets(QASets)
+      })
+      .then((summary) => {
         res(summary)
       })
       .catch((err) => {
@@ -99,86 +103,104 @@ exports.checkDynamoForAds = function(ad_id) {
 }
 
 function sortQASets(QASets){
-  const uniques = []
-  QASets.forEach((item) => {
-    let newTag = false
-    uniques.forEach((u) => {
-      if (u === item.TAGS) {
-        newTag = true
+  const p = new Promise((res, rej) => {
+    const uniques = []
+    QASets.forEach((item) => {
+      let newTag = false
+      uniques.forEach((u) => {
+        if (u === item.TAGS) {
+          newTag = true
+        }
+      })
+      if (!newTag) {
+        uniques.push(item.TAGS)
       }
     })
-    if (!newTag) {
-      uniques.push(item.TAGS)
-    }
-  })
-  const forms = [
-    basic_typeform_elastic_map,
-    advanced_typeform_elastic_map,
-    seeking_typeform_elastic_map,
-  ].map((f) => {
-    return {
-      form_id: f.form_id,
-      tags: f.questions.map((q) => {
-        return q.tag_ids.join(',')
-      }).join(',')
-    }
-  })
-  let mappings = {
-    basic: [],
-    advanced: [],
-    seeking: [],
-    other: [],
-  }
-  const all_questions = uniques.map((u) => {
-    return QASets.filter((item) => {
-      return item.TAGS === u
-    })
-  }).map((historicalSet) => {
-    let summ = {
-      question: null,
-      answer: null
-    }
-    summ.question = historicalSet.filter((item) => {
-      return item.TYPE === 'ORIGINAL_QUESTION'
-    }).sort((a, b) => {
-      console.log(a)
-      console.log(b)
-      if (a && b) {
-        return moment(b.DATETIME).unix() - moment(a.DATETIME).unix()
-      } else {
-        return 1
-      }
-    })[0]
-    summ.answer = historicalSet.filter((item) => {
-      return item.TYPE === 'ANSWER'
-    }).sort((a, b) => {
-      if (a && b) {
-        return moment(b.DATETIME).unix() - moment(a.DATETIME).unix()
-      } else {
-        return 1
-      }
-    })[0]
-    return summ
-  }).forEach((summ) => {
-    let form_id = ''
-    console.log(summ)
-    forms.forEach((form) => {
-      if (form.tags.indexOf(summ.question.TAGS) > -1) {
-        form_id = form.form_id
-      }
-    })
-    if (form_id === 'xvmqm2') {
-      mappings.basic.push(summ)
-    } else if (form_id === 'f2E1MJ') {
-      mappings.advanced.push(summ)
-    } else if (form_id === 'ksLFy7') {
-      mappings.seeking.push(summ)
-    } else {
-      mappings.other.push(summ)
-    }
-  })
+    const headers = {
+      headers: {
 
-  return mappings
+      }
+    }
+    const x = [
+      axios.get(URL_basic_typeform_elastic_map, headers),
+      axios.get(URL_advanced_typeform_elastic_map, headers),
+      axios.get(URL_seeking_typeform_elastic_map, headers),
+    ]
+    Promise.all(x)
+        .then((data) => {
+          const forms = data.map((d) => {
+            console.log(d.data)
+            return d.data
+          }).map((f) => {
+            return {
+              form_id: f.form_id,
+              tags: f.questions.map((q) => {
+                return q.tag_ids.join(',')
+              }).join(',')
+            }
+          })
+          let mappings = {
+            basic: [],
+            advanced: [],
+            seeking: [],
+            other: [],
+          }
+          const all_questions = uniques.map((u) => {
+            return QASets.filter((item) => {
+              return item.TAGS === u
+            })
+          }).map((historicalSet) => {
+            let summ = {
+              question: null,
+              answer: null
+            }
+            summ.question = historicalSet.filter((item) => {
+              return item.TYPE === 'ORIGINAL_QUESTION'
+            }).sort((a, b) => {
+              console.log(a)
+              console.log(b)
+              if (a && b) {
+                return moment(b.DATETIME).unix() - moment(a.DATETIME).unix()
+              } else {
+                return 1
+              }
+            })[0]
+            summ.answer = historicalSet.filter((item) => {
+              return item.TYPE === 'ANSWER'
+            }).sort((a, b) => {
+              if (a && b) {
+                return moment(b.DATETIME).unix() - moment(a.DATETIME).unix()
+              } else {
+                return 1
+              }
+            })[0]
+            return summ
+          }).forEach((summ) => {
+            let form_id = ''
+            console.log(summ)
+            forms.forEach((form) => {
+              if (form.tags.indexOf(summ.question.TAGS) > -1) {
+                form_id = form.form_id
+              }
+            })
+            if (form_id === 'xvmqm2') {
+              mappings.basic.push(summ)
+            } else if (form_id === 'f2E1MJ') {
+              mappings.advanced.push(summ)
+            } else if (form_id === 'ksLFy7') {
+              mappings.seeking.push(summ)
+            } else {
+              mappings.other.push(summ)
+            }
+          })
+          res(mappings)
+        })
+        .catch((err) => {
+          console.log(err)
+          rej(err)
+        })
+  })
+  return p
 }
 
 exports.updateAnswer = function(ansObj) {

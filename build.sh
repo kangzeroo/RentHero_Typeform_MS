@@ -1,1 +1,1 @@
-docker build -t renthero_typeform_ms .
+docker build -t renthero_typeforms_ms .
