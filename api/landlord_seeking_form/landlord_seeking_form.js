@@ -2,7 +2,7 @@ const fs = require('fs')
 const axios = require('axios')
 const extractAnswerFromTypeformFieldType = require('../typeform_answer_formatter').extractAnswerFromTypeformFieldType
 // const seeking_typeform_elastic_map = require('./js/seeking_typeform_elastic_map').seeking_typeform_elastic_map
-const URL_seeking_typeform_elastic_map = require('../mapping_locations').URL_seeking_typeform_elastic_map
+const URL_seeking_typeform_elastic_map = require('../mapping_locations').getMaps().URL_seeking_typeform_elastic_map
 const headers = {
   headers: {
 

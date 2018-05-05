@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 
 // middleware
 // const google_jwt_check = require('./auth/google_jwt_check').google_jwt_check
-// const origin_check = require('./auth/origin_check').origin_check
+const originCheck = require('./auth/originCheck').originCheck
 
 // routes
 const Test = require('./routes/test_routes')
@@ -21,6 +21,6 @@ module.exports = function(app){
 	app.post('/advanced_typeform', [json_encoding], Typeform.advanced_typeform)
 	app.post('/seeking_typeform', [json_encoding], Typeform.seeking_typeform)
 
-	app.post('/check_form_completion', [json_encoding], Typeform.check_form_completion)
-	app.post('/update_answer', [json_encoding], Typeform.update_answer)
+	app.post('/check_form_completion', [json_encoding, originCheck], Typeform.check_form_completion)
+	app.post('/update_answer', [json_encoding, originCheck], Typeform.update_answer)
 }
