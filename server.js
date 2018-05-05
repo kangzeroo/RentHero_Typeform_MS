@@ -30,30 +30,48 @@ const port = process.env.PORT || 8301
 if (process.env.NODE_ENV === 'production') {
   // instantiate the SSL certificate necessary for HTTPS
   const options = {
-      ca: fs.readFileSync('./credentials/rentburrow_com.ca-bundle'),
-      key: fs.readFileSync('./credentials/rentburrow_com.key'),
-      cert: fs.readFileSync('./credentials/rentburrow_com.crt'),
+      ca: fs.readFileSync('./credentials/'+process.env.NODE_ENV+'/rentburrow_com.ca-bundle'),
+      key: fs.readFileSync('./credentials/'+process.env.NODE_ENV+'/rentburrow_com.key'),
+      cert: fs.readFileSync('./credentials/'+process.env.NODE_ENV+'/rentburrow_com.crt'),
       requestCert: false,
       rejectUnauthorized: false
   }
   const server = https.createServer(options, app)
   // listen to the server on port
   server.listen(port, function(){
-    console.log("Server listening on https: ", port)
+    console.log("Production server listening on https: ", port)
   })
-} else {
+} else if (process.env.NODE_ENV === 'staging') {
   // instantiate the SSL certificate necessary for HTTPS
   const options = {
-      ca: fs.readFileSync('./credentials/renthero_host.ca-bundle'),
-      key: fs.readFileSync('./credentials/renthero_host.key'),
-      cert: fs.readFileSync('./credentials/renthero_host.crt'),
+      ca: fs.readFileSync('./credentials/'+process.env.NODE_ENV+'/renthero_host.ca-bundle'),
+      key: fs.readFileSync('./credentials/'+process.env.NODE_ENV+'/renthero_host.key'),
+      cert: fs.readFileSync('./credentials/'+process.env.NODE_ENV+'/renthero_host.crt'),
       requestCert: false,
       rejectUnauthorized: false
   }
   const server = https.createServer(options, app)
   // listen to the server on port
   server.listen(port, function(){
-    console.log("Server listening on https: ", port)
+    console.log("Staging server listening on https: ", port)
+  })
+  // const server = http.createServer(app)
+  // server.listen(port, function(){
+  //   console.log("Server listening on http: ", port)
+  // })
+} else if (process.env.NODE_ENV === 'development') {
+  // instantiate the SSL certificate necessary for HTTPS
+  const options = {
+      ca: fs.readFileSync('./credentials/'+process.env.NODE_ENV+'/renthero_host.ca-bundle'),
+      key: fs.readFileSync('./credentials/'+process.env.NODE_ENV+'/renthero_host.key'),
+      cert: fs.readFileSync('./credentials/'+process.env.NODE_ENV+'/renthero_host.crt'),
+      requestCert: false,
+      rejectUnauthorized: false
+  }
+  const server = https.createServer(options, app)
+  // listen to the server on port
+  server.listen(port, function(){
+    console.log("Development server listening on https: ", port)
   })
   // const server = http.createServer(app)
   // server.listen(port, function(){
