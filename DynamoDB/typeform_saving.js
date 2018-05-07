@@ -4,9 +4,9 @@ const moment = require('moment')
 const insertItem = require('./general_insertions').insertItem
 const query_dynamodb = require('./general_queryable').query_dynamodb
 const RENTHERO_QALTA_SETS = require('./schema/dynamodb_tablenames').RENTHERO_QALTA_SETS
-const URL_basic_typeform_elastic_map = require('../api/mapping_locations').URL_basic_typeform_elastic_map
-const URL_advanced_typeform_elastic_map = require('../api/mapping_locations').URL_advanced_typeform_elastic_map
-const URL_seeking_typeform_elastic_map = require('../api/mapping_locations').URL_seeking_typeform_elastic_map
+const URL_basic_typeform_elastic_map = require('../api/mapping_locations').getMaps().URL_basic_typeform_elastic_map
+const URL_advanced_typeform_elastic_map = require('../api/mapping_locations').getMaps().URL_advanced_typeform_elastic_map
+const URL_seeking_typeform_elastic_map = require('../api/mapping_locations').getMaps().URL_seeking_typeform_elastic_map
 
 exports.saveGroupedTypeFormDataToDynamoDB = function(grouped, ad_id, landlord_id){
   const p = new Promise((res, rej) => {
@@ -95,6 +95,7 @@ exports.checkDynamoForAds = function(ad_id) {
         res(summary)
       })
       .catch((err) => {
+        console.log('-------- ERROR')
         console.log(err)
         rej(err)
       })
@@ -121,6 +122,12 @@ function sortQASets(QASets){
 
       }
     }
+    console.log('----------------')
+    console.log(URL_basic_typeform_elastic_map)
+    console.log('----------------')
+    console.log(URL_advanced_typeform_elastic_map)
+    console.log('----------------')
+    console.log(URL_seeking_typeform_elastic_map)
     const x = [
       axios.get(URL_basic_typeform_elastic_map, headers),
       axios.get(URL_advanced_typeform_elastic_map, headers),
@@ -196,7 +203,6 @@ function sortQASets(QASets){
           res(mappings)
         })
         .catch((err) => {
-          console.log(err)
           rej(err)
         })
   })
