@@ -30,13 +30,13 @@ exports.saveGroupedTypeFormDataToDynamoDB = function(grouped, ad_id, landlord_id
 
 const saveQuestionAndAnswer = (group, ad_id, landlord_id) => {
   const x = [
-    saveQuestionToDYN(group.question_phrasing, group.tags, ad_id, landlord_id),
-    saveAnswerToDYN(group.question_phrasing, group.answer_phrasing, group.tags, ad_id, landlord_id)
+    saveQuestionToDYN(group.question_phrasing, group.tags, ad_id, landlord_id, group.question_id),
+    saveAnswerToDYN(group.question_phrasing, group.answer_phrasing, group.tags, ad_id, landlord_id, group.question_id)
   ]
   return Promise.all(x)
 }
 
-const saveQuestionToDYN = (question_phrasing, tags, ad_id, landlord_id) => {
+const saveQuestionToDYN = (question_phrasing, tags, ad_id, landlord_id, question_id) => {
   console.log('------------- saving question... ---------------')
   const item = {
     'TableName': RENTHERO_QALTA_SETS,
@@ -47,14 +47,15 @@ const saveQuestionToDYN = (question_phrasing, tags, ad_id, landlord_id) => {
       'TAGS': tags,
       'PHRASING': question_phrasing,
       'DATETIME': moment().toISOString(),
-      'LANDLORD_ID': landlord_id
+      'LANDLORD_ID': landlord_id,
+      'QUESTION_ID': question_id
     }
   }
   console.log(item)
   return insertItem(item)
 }
 
-const saveAnswerToDYN = (question_phrasing, answer_phrasing, tags, ad_id, landlord_id) => {
+const saveAnswerToDYN = (question_phrasing, answer_phrasing, tags, ad_id, landlord_id, question_id) => {
   console.log('------------- saving answer... ---------------')
   const item = {
     'TableName': RENTHERO_QALTA_SETS,
@@ -66,7 +67,8 @@ const saveAnswerToDYN = (question_phrasing, answer_phrasing, tags, ad_id, landlo
       'QUESTION': question_phrasing,
       'PHRASING': answer_phrasing,
       'DATETIME': moment().toISOString(),
-      'LANDLORD_ID': landlord_id
+      'LANDLORD_ID': landlord_id,
+      'QUESTION_ID': question_id
     }
   }
   console.log(item)
