@@ -7,6 +7,9 @@ const RENTHERO_QALTA_SETS = require('./schema/dynamodb_tablenames').RENTHERO_QAL
 const URL_basic_typeform_elastic_map = require('../api/mapping_locations').getMaps().URL_basic_typeform_elastic_map
 const URL_advanced_typeform_elastic_map = require('../api/mapping_locations').getMaps().URL_advanced_typeform_elastic_map
 const URL_seeking_typeform_elastic_map = require('../api/mapping_locations').getMaps().URL_seeking_typeform_elastic_map
+const basic_form_id = require(`../credentials/${process.env.NODE_ENV}/typeform_profile`).basic_form_id
+const advanced_form_id = require(`../credentials/${process.env.NODE_ENV}/typeform_profile`).advanced_form_id
+const seeking_form_id = require(`../credentials/${process.env.NODE_ENV}/typeform_profile`).seeking_form_id
 
 exports.saveGroupedTypeFormDataToDynamoDB = function(grouped, ad_id, landlord_id){
   const p = new Promise((res, rej) => {
@@ -138,7 +141,7 @@ function sortQASets(QASets){
     Promise.all(x)
         .then((data) => {
           const forms = data.map((d) => {
-            console.log(d.data)
+            // console.log(d.data)
             return d.data
           }).map((f) => {
             return {
@@ -192,11 +195,11 @@ function sortQASets(QASets){
                 form_id = form.form_id
               }
             })
-            if (form_id === 'xvmqm2') {
+            if (form_id === basic_form_id) {
               mappings.basic.push(summ)
-            } else if (form_id === 'f2E1MJ') {
+            } else if (form_id === advanced_form_id) {
               mappings.advanced.push(summ)
-            } else if (form_id === 'ksLFy7') {
+            } else if (form_id === seeking_form_id) {
               mappings.seeking.push(summ)
             } else {
               mappings.other.push(summ)
