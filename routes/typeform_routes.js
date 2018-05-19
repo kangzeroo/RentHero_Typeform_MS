@@ -4,6 +4,9 @@ const process_seeking_form = require('../api/landlord_seeking_form/landlord_seek
 const saveGroupedTypeFormDataToDynamoDB = require('../DynamoDB/typeform_saving').saveGroupedTypeFormDataToDynamoDB
 const checkDynamoForAds = require('../DynamoDB/typeform_saving').checkDynamoForAds
 const updateAnswer = require('../DynamoDB/typeform_saving').updateAnswer
+const logTypeformMilestone = require('../api/stackdriver/stackdriver_api_landlord').logTypeformMilestone
+const logTypeformError = require('../api/stackdriver/stackdriver_api_landlord').logTypeformError
+const saveTypeformProgress = require('../api/stackdriver/stackdriver_api_landlord').saveTypeformProgress
 
 exports.basic_typeform = function(req, res, next) {
   // fs.writeFile("./output/typeform_output.json", JSON.stringify(typeform), function(err) {
@@ -17,15 +20,22 @@ exports.basic_typeform = function(req, res, next) {
   // })
   const ad_id = req.body.form_response.hidden.ad_id
   const landlord_id = req.body.form_response.hidden.identityid
+  const progress = []
+  progress.push(logTypeformMilestone(ad_id, landlord_id, 'POST/basic_typeform: Typeform answers are about to be saved!', req.body, new Error().stack))
   process_basic_form(req.body)
     .then((grouped) => {
+      progress.push(logTypeformMilestone(ad_id, landlord_id, 'POST/basic_typeform: Typeform answers were formatted', grouped, new Error().stack))
       return saveGroupedTypeFormDataToDynamoDB(grouped, ad_id, landlord_id)
     })
     .then((data) => {
+      progress.push(logTypeformMilestone(ad_id, landlord_id, 'POST/basic_typeform: Typeform answers were successfully saved', data, new Error().stack))
+      saveTypeformProgress(progress)
       res.status(200).send('Successfully saved POST /basic_typeform')
     })
     .catch((err) => {
       console.log(err)
+      progress.push(logTypeformError(ad_id, landlord_id, 'POST/basic_typeform: An error occurred.', err, new Error().stack), 500)
+      saveTypeformProgress(progress)
       res.status(500).send('An error occurred at POST /basic_typeform')
     })
 }
