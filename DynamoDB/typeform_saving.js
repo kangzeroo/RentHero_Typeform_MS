@@ -89,8 +89,8 @@ exports.checkDynamoForAds = function(ad_id) {
     }
     query_dynamodb(params)
       .then((QASets) => {
-        console.log(QASets)
-        console.log('---- nice')
+        // console.log(QASets)
+        // console.log('---- nice')
         return sortQASets(QASets)
       })
       .then((summary) => {
@@ -124,12 +124,12 @@ function sortQASets(QASets){
 
       }
     }
-    console.log('----------------')
-    console.log(URL_basic_typeform_elastic_map)
-    console.log('----------------')
-    console.log(URL_advanced_typeform_elastic_map)
-    console.log('----------------')
-    console.log(URL_seeking_typeform_elastic_map)
+    // console.log('----------------')
+    // console.log(URL_basic_typeform_elastic_map)
+    // console.log('----------------')
+    // console.log(URL_advanced_typeform_elastic_map)
+    // console.log('----------------')
+    // console.log(URL_seeking_typeform_elastic_map)
     const x = [
       axios.get(URL_basic_typeform_elastic_map, headers),
       axios.get(URL_advanced_typeform_elastic_map, headers),
@@ -166,8 +166,8 @@ function sortQASets(QASets){
             summ.question = historicalSet.filter((item) => {
               return item.TYPE === 'ORIGINAL_QUESTION'
             }).sort((a, b) => {
-              console.log(a)
-              console.log(b)
+              // console.log(a)
+              // console.log(b)
               if (a && b) {
                 return moment(b.DATETIME).unix() - moment(a.DATETIME).unix()
               } else {
@@ -186,7 +186,7 @@ function sortQASets(QASets){
             return summ
           }).forEach((summ) => {
             let form_id = ''
-            console.log(summ)
+            // console.log(summ)
             forms.forEach((form) => {
               if (form.tags.indexOf(summ.question.TAGS) > -1) {
                 form_id = form.form_id
