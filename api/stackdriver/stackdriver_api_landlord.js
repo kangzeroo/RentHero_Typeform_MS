@@ -45,7 +45,7 @@ exports.logTypeformMilestone = (ad_id, landlord_id, message, payload, stacktrace
 
 exports.logTypeformError = (ad_id, landlord_id, message, payload, stacktrace, severity) => {
   // The name of the log to write to
-  const logName = `session-progress`
+  const logName = `typeform-saving`
   // Selects the log to write to
   const log = logging.log(logName)
   const created_at = moment().toISOString()
@@ -77,7 +77,7 @@ exports.logTypeformError = (ad_id, landlord_id, message, payload, stacktrace, se
 
 exports.saveTypeformProgress = (entries) => {
   // The name of the log to write to
-  const logName = `session-progress`
+  const logName = `typeform-saving`
   // Selects the log to write to
   const log = logging.log(logName)
   // Writes the log entry
