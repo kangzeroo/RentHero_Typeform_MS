@@ -56,6 +56,7 @@ const groupWithTypeform = (QnT, typeform) => {
     let question_phrasing = ''
     let tags = set.tag_ids
     let answer_phrasing = ''
+    let question_id = ''
     const matchedQuestions = typeform.form_response.definition.fields.filter((field) => {
       // recall that set.question_ids is a string CSV of multiple question_ids
       // field.id is one question_id. We use a string CSV so that we can group a history of Typeform questions to inherit the tags of a QnT set
@@ -63,6 +64,7 @@ const groupWithTypeform = (QnT, typeform) => {
     })
     if (matchedQuestions && matchedQuestions[0]) {
       question_phrasing = matchedQuestions[0].title
+      question_id = matchedQuestions[0].id
     }
     const matchedAnswers = typeform.form_response.answers.filter((ans) => {
       return set.question_ids.indexOf(ans.field.id) > -1
@@ -74,6 +76,7 @@ const groupWithTypeform = (QnT, typeform) => {
       question_phrasing: question_phrasing,
       tags: tags,
       answer_phrasing: answer_phrasing,
+      question_id: question_id
     }
   }).filter((objSets) => {
     return objSets.question_phrasing && objSets.tags && objSets.answer_phrasing
