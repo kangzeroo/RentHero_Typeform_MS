@@ -4,12 +4,35 @@ const dynaDoc = require("dynamodb-doc");
 const path = require('path')
 const pathToAWSConfig = path.join(__dirname, '..', 'credentials', process.env.NODE_ENV, 'aws_config.json')
 const aws_config = require(pathToAWSConfig)
+const logTypeformError = require('../api/stackdriver/stackdriver_api_landlord').logTypeformError
+const saveTypeformProgress = require('../api/stackdriver/stackdriver_api_landlord').saveTypeformProgress
 AWS.config.update(aws_config)
 const dynamodb = new AWS.DynamoDB({
   dynamodb: '2012-08-10',
   region: "us-east-1"
 })
 const docClient = new dynaDoc.DynamoDB(dynamodb)
+
+// to insert or update an entry
+exports.insertItem = function(item, ad_id, landlord_id){
+  const p = new Promise((res, rej) => {
+    // const intelObj = {
+    //   'TableName': 'TOUR_HINTS',
+    //   'Item': intel,
+    // }
+    docClient.putItem(item, function(err, data) {
+      if (err){
+          console.log(JSON.stringify(err, null, 2));
+          saveTypeformProgress([logTypeformError(ad_id, landlord_id, 'ERROR SAVING TYPEFORM ENTRY', item, new Error().stack)])
+          rej(err)
+      }else{
+          console.log('INTEL INSERTION SUCCESS!')
+          res('saved')
+      }
+    })
+  })
+  return p
+}
 
 // to insert or update an entry
 exports.insertItem = function(item){
