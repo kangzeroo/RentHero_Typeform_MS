@@ -55,7 +55,7 @@ const saveQuestionToDYN = (question_phrasing, tags, ad_id, landlord_id, question
     }
   }
   console.log(item)
-  return insertItem(item)
+  return insertItem(item, ad_id, landlord_id)
 }
 
 const saveAnswerToDYN = (question_phrasing, answer_phrasing, tags, ad_id, landlord_id, question_id) => {
@@ -75,7 +75,7 @@ const saveAnswerToDYN = (question_phrasing, answer_phrasing, tags, ad_id, landlo
     }
   }
   console.log(item)
-  return insertItem(item)
+  return insertItem(item, ad_id, landlord_id)
 }
 
 exports.checkDynamoForAds = function(ad_id) {
