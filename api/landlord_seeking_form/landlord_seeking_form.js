@@ -25,7 +25,7 @@ exports.process_seeking_form = function(typeform) {
           const QnT = extractQuestionsAndTags(seeking_typeform_elastic_map.data)
           // console.log(QnT)
           const grouped = groupWithTypeform(QnT, typeform)
-          res(grouped)
+          res({ grouped: grouped, logs: [] })
         } else {
           rej(`The received Typeform ID#${typeform.form_response.form_id} did not match the template map with ID#${seeking_typeform_elastic_map.data.form_id}`)
         }
