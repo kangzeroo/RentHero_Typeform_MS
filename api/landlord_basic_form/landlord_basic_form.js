@@ -1,6 +1,7 @@
 const fs = require('fs')
 const axios = require('axios')
 const extractAnswerFromTypeformFieldType = require('../typeform_answer_formatter').extractAnswerFromTypeformFieldType
+const logTypeformMilestone = require('../../api/stackdriver/stackdriver_api_landlord').logTypeformMilestone
 // const basic_typeform_elastic_map = require('./js/basic_typeform_elastic_map').basic_typeform_elastic_map
 const URL_basic_typeform_elastic_map = require('../mapping_locations').getMaps().URL_basic_typeform_elastic_map
 const headers = {
@@ -9,10 +10,13 @@ const headers = {
   }
 }
 
-exports.process_basic_form = function(typeform) {
+exports.process_basic_form = function(typeform, ad_id, landlord_id) {
   const p = new Promise((res, rej) => {
+    const logs = []
+    console.log(URL_basic_typeform_elastic_map)
     axios.get(URL_basic_typeform_elastic_map, headers)
       .then((basic_typeform_elastic_map) => {
+        logs.push(logTypeformMilestone(ad_id, landlord_id, 'POST/basic_typeform: Comparing with S3 typeform_mapping', basic_typeform_elastic_map.data, new Error().stack))
         if (verifyCorrectForm(typeform, basic_typeform_elastic_map.data)) {
           /*
             1. Create a QnT (Questions and Tags) set grouped by ID. Use `basic_typeform_elastic_map.js` as template of appropriate IDs
@@ -23,9 +27,11 @@ exports.process_basic_form = function(typeform) {
             6. Save to DynamoDB
           */
           const QnT = extractQuestionsAndTags(basic_typeform_elastic_map.data)
-          // console.log(QnT)
+          console.log(QnT)
+          logs.push(logTypeformMilestone(ad_id, landlord_id, 'POST/basic_typeform: Got the QnT', QnT, new Error().stack))
           const grouped = groupWithTypeform(QnT, typeform)
-          res(grouped)
+          logs.push(logTypeformMilestone(ad_id, landlord_id, 'POST/basic_typeform: Got the grouped', grouped, new Error().stack))
+          res({ grouped: grouped, logs: logs })
         } else {
           rej(`The received Typeform ID#${typeform.form_response.form_id} did not match the template map with ID#${basic_typeform_elastic_map.data.form_id}`)
         }

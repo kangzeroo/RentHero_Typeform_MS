@@ -20,10 +20,11 @@ exports.basic_typeform = function(req, res, next) {
   // })
   const ad_id = req.body.form_response.hidden.ad_id
   const landlord_id = req.body.form_response.hidden.identityid
-  const progress = []
+  let progress = []
   progress.push(logTypeformMilestone(ad_id, landlord_id, 'POST/basic_typeform: Typeform answers are about to be saved!', req.body, new Error().stack))
-  process_basic_form(req.body)
-    .then((grouped) => {
+  process_basic_form(req.body, ad_id, landlord_id)
+    .then(({ grouped, logs }) => {
+      logs.forEach((l) => progress.push(l))
       progress.push(logTypeformMilestone(ad_id, landlord_id, 'POST/basic_typeform: Typeform answers were formatted', grouped, new Error().stack))
       return saveGroupedTypeFormDataToDynamoDB(grouped, ad_id, landlord_id)
     })
@@ -52,15 +53,23 @@ exports.advanced_typeform = function(req, res, next) {
   // })
   const ad_id = req.body.form_response.hidden.ad_id
   const landlord_id = req.body.form_response.hidden.identityid
+  let progress = []
+  progress.push(logTypeformMilestone(ad_id, landlord_id, 'POST/advanced_typeform: Typeform answers are about to be saved!', req.body, new Error().stack))
   process_advanced_form(req.body)
-    .then((grouped) => {
+    .then(({ grouped, logs }) => {
+      logs.forEach((l) => progress.push(l))
+      progress.push(logTypeformMilestone(ad_id, landlord_id, 'POST/advanced_typeform: Typeform answers were formatted', grouped, new Error().stack))
       return saveGroupedTypeFormDataToDynamoDB(grouped, ad_id, landlord_id)
     })
     .then((data) => {
+      progress.push(logTypeformMilestone(ad_id, landlord_id, 'POST/advanced_typeform: Typeform answers were successfully saved', data, new Error().stack))
+      saveTypeformProgress(progress)
       res.status(200).send('Successfully saved POST /advanced_typeform')
     })
     .catch((err) => {
       console.log(err)
+      progress.push(logTypeformError(ad_id, landlord_id, 'POST/advanced_typeform: An error occurred.', err, new Error().stack), 500)
+      saveTypeformProgress(progress)
       res.status(500).send('An error occurred at POST /advanced_typeform')
     })
 }
@@ -77,15 +86,23 @@ exports.seeking_typeform = function(req, res, next) {
   // })
   const ad_id = req.body.form_response.hidden.ad_id
   const landlord_id = req.body.form_response.hidden.identityid
+  let progress = []
+  progress.push(logTypeformMilestone(ad_id, landlord_id, 'POST/seeking_typeform: Typeform answers are about to be saved!', req.body, new Error().stack))
   process_seeking_form(req.body)
-    .then((grouped) => {
+    .then(({ grouped, logs }) => {
+      logs.forEach((l) => progress.push(l))
+      progress.push(logTypeformMilestone(ad_id, landlord_id, 'POST/seeking_typeform: Typeform answers were formatted', grouped, new Error().stack))
       return saveGroupedTypeFormDataToDynamoDB(grouped, ad_id, landlord_id)
     })
     .then((data) => {
+      progress.push(logTypeformMilestone(ad_id, landlord_id, 'POST/seeking_typeform: Typeform answers were successfully saved', data, new Error().stack))
+      saveTypeformProgress(progress)
       res.status(200).send('Successfully saved POST /seeking_typeform')
     })
     .catch((err) => {
       console.log(err)
+      progress.push(logTypeformError(ad_id, landlord_id, 'POST/seeking_typeform: An error occurred.', err, new Error().stack), 500)
+      saveTypeformProgress(progress)
       res.status(500).send('An error occurred at POST /seeking_typeform')
     })
 }
